@@ -55,5 +55,55 @@ SELECT * FROM tareas WHERE usuario_id=1 or usuario_id=2;
 
 INSERT INTO tareas (id, titulo, descripcion, usuario_id) VALUES (DEFAULT, 'Ir a comer', 'Comer un sabroso pollito a la brasa', 1),
                                                                 (DEFAULT, 'Comer pizza', 'Comer una sabrosa pizza con peperoni', 1);
-	
-SELECT * FROM tareas WHERE usuario_id=1;
+
+-- Buscar una palabra o palabras dentro de un texto	
+SELECT * FROM tareas WHERE usuario_id=1 AND titulo LIKE '%comer%';
+SELECT * FROM usuarios WHERE nombre LIKE '%o';
+SELECT * FROM usuarios WHERE nombre LIKE 'J%';
+-- Si queremos hacer la distincion entre mayus y minus entonces antes de poner el texto colocaremos la palabra
+-- BINARY y esto sirbe para que haga la comparacion a nivel de numeros de caracteres (formatos ASCII)
+SELECT * FROM usuarios WHERE nombre LIKE BINARY 'j%';
+
+-- _ > indico cuantos caracteres debe de 'saltar' para que busque el caracter indicado
+SELECT * FROM usuarios WHERE nombre LIKE '_u%';
+
+SELECT * FROM usuarios WHERE nombre NOT LIKE '__u%';
+
+SELECT * FROM tareas;
+
+-- Ahora insertamos una tarea sin dueño
+INSERT INTO tareas (id, titulo,descripcion, usuario_id) VALUES
+					(DEFAULT, 'Jugar LOL','Jugar con mis amigos pros',3);
+
+SELECT * FROM tareas;
+
+INSERT INTO tareas (id, titulo,descripcion, usuario_id) VALUES (DEFAULT, 'no hacer nada','no hacer nada porque tengo flojera');
+
+-- Interseccion entre la tabla usuarios con la tabla tareas donde usuarios.id = tareas.usuario_id
+SELECT * FROM usuarios INNER JOIN tareas ON usuarios.id = tareas.usuario_id;
+
+SELECT * FROM usuarios LEFT JOIN tareas ON usuarios.id = tareas.usuario_id;
+
+SELECT * FROM usuarios RIGHT JOIN tareas ON usuarios.id = tareas.usuario_id;
+
+-- FULL OUTER JOIN
+-- Selecciona todos los usuarios aun asi no tengan tareas y todas las tareas aun asi no tengan usuarios
+-- hace una mezcla completa entre los usuarios y las tareas respetando sus conexiones
+SELECT * FROM usuarios LEFT JOIN tareas ON usuarios.id = tareas.usuario_id UNION
+SELECT * FROM usuarios RIGHT JOIN tareas ON usuarios.id = tareas.usuario_id;
+
+-- UNION mezcla o combina las dos o mas consultas en una sola 'tabla virtual' pero estas consultas tienen
+-- que tener el mismo numero de columnas, sino el uion sera incorrecto
+SELECT nombre FROM usuarios UNION
+SELECT titulo FROM tareas;
+
+-- CONCATENAR > juntar combinar
+SELECT CONCAT(titulo, ' ', descripciousuariosn) AS 'nombre completos' FROM tareas;
+
+-- EJERCICIOS
+-- 1. Devolver todos los usuarios cuyo dni contengan el numero 5
+SELECT * FROM usuarios WHERE dni LIKE '%5%';
+-- 2. Devolver todos los usuarios cuyo dni tengan el tercer digito 8
+SELECT * FROM usuarios WHERE dni LIKE '___8%';
+-- 3. Devolver todas las tareas del usuario 'Eduardo'
+SELECT * FROM usuarios INNER JOIN tareas ON usuarios.id = tareas.usuario_id WHERE nombre='Eduardo';
